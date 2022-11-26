@@ -1,7 +1,7 @@
 {
   "name": "@gibme/base58",
-  "version": "1.0.0",
-  "description": "A simple base58 helper",
+  "version": "1.0.1",
+  "description": "Base58 Library",
   "main": "dist/base58.js",
   "types": "dist/base58.d.ts",
   "files": [
@@ -9,7 +9,9 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "./node_modules/.bin/tsc",
+    "build": "yarn build:typescript",
+    "build:docs": "./node_modules/.bin/typedoc",
+    "build:typescript": "./node_modules/.bin/tsc",
     "test": "yarn test:style && yarn test:mocha",
     "test:style": "yarn style",
     "test:mocha": "./node_modules/.bin/mocha --exit --timeout 30000 --require ts-node/register test/test.ts",
@@ -25,6 +27,7 @@
   "bugs": {
     "url": "https://github.com/gibme-npm/base58/issues"
   },
+  "homepage": "https://gibme-npm.github.io/base58/",
   "engines": {
     "node": ">=16"
   },
@@ -46,10 +49,11 @@
     "eslint-plugin-promise": "^6.1.1",
     "mocha": "^10.1.0",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.23.21",
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@gibme/bytepack": "^1.0.0",
+    "@gibme/bytepack": "^1.0.2",
     "base58-js": "^1.0.5"
   }
 }

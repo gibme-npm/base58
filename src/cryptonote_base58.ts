@@ -1,10 +1,24 @@
-// Copyright (c) 2018-2022 Brandon Lehmann
+// Copyright (c) 2018-2022, Brandon Lehmann <brandonlehmann@gmail.com>
 //
-// Please see the included LICENSE file for more information.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-import { BytePackBigInt } from '@gibme/bytepack';
-import Helpers from './helpers';
-import { Base58Handler } from './types';
+import { BytePackBigInt, Reader, Writer } from '@gibme/bytepack';
 
 /** @ignore */
 const ALPHABET: number[] = (() => {
@@ -26,14 +40,16 @@ const FULL_ENCODED_BLOCK_SIZE = 11;
 /** @ignore */
 const UINT64_MAX = BytePackBigInt(2).pow(64);
 
-export default class CryptoNoteBase58 implements Base58Handler {
+export default abstract class CryptoNoteBase58 {
     /**
-     * Decodes the Base58 encoded string into a Buffer
+     * Decodes the CryptoNote Base58 encoded string into a Buffer
      *
      * @param encoded
      */
-    public static decode (encoded: string): Buffer {
-        const enc = Helpers.stringToBin(encoded);
+    public static cn_decode (
+        encoded: string
+    ): Buffer {
+        const enc = Buffer.from(encoded).valueOf();
 
         if (enc.length === 0) {
             return Buffer.alloc(0);
@@ -59,7 +75,8 @@ export default class CryptoNoteBase58 implements Base58Handler {
                     i * FULL_ENCODED_BLOCK_SIZE,
                     i * FULL_ENCODED_BLOCK_SIZE + FULL_ENCODED_BLOCK_SIZE),
                 result,
-                i * FULL_BLOCK_SIZE);
+                i * FULL_BLOCK_SIZE
+            );
         }
 
         if (lastBlockSize > 0) {
@@ -68,25 +85,28 @@ export default class CryptoNoteBase58 implements Base58Handler {
                     fullBlockCount * FULL_ENCODED_BLOCK_SIZE,
                     fullBlockCount * FULL_ENCODED_BLOCK_SIZE + lastBlockSize),
                 result,
-                fullBlockCount * FULL_BLOCK_SIZE);
+                fullBlockCount * FULL_BLOCK_SIZE
+            );
         }
 
         return Buffer.from(result);
     }
 
     /**
-     * Encodes the data into Base58
+     * Encodes the data into CryptoNote Base58 string
      *
      * @param data
      */
-    public static encode (data: string | Uint8Array | Buffer): string {
+    public static cn_encode (
+        data: string | Uint8Array | Buffer
+    ): string {
         if (data instanceof Buffer) {
             data = data.toString('hex');
         } else if (data instanceof Uint8Array) {
             data = Buffer.from(data).toString('hex');
         }
 
-        const _data = Helpers.hexToBin(data);
+        const _data = Buffer.from(data, 'hex').valueOf();
 
         if (_data.length === 0) {
             return '';
@@ -100,13 +120,11 @@ export default class CryptoNoteBase58 implements Base58Handler {
 
         let result = new Uint8Array(resSize);
 
-        let i;
-
-        for (i = 0; i < resSize; ++i) {
+        for (let i = 0; i < resSize; ++i) {
             result[i] = ALPHABET[0];
         }
 
-        for (i = 0; i < fullBlockCount; i++) {
+        for (let i = 0; i < fullBlockCount; i++) {
             result = CryptoNoteBase58.encodeBlock(
                 _data.subarray(
                     i * FULL_BLOCK_SIZE,
@@ -124,7 +142,7 @@ export default class CryptoNoteBase58 implements Base58Handler {
                 fullBlockCount * FULL_ENCODED_BLOCK_SIZE);
         }
 
-        return Helpers.binToString(result);
+        return Buffer.from(result).toString();
     }
 
     /**
@@ -172,7 +190,12 @@ export default class CryptoNoteBase58 implements Base58Handler {
             throw new Error('Overflow 2');
         }
 
-        buffer.set(Helpers.uint64To8be(resNum, resSize), index);
+        const value = new Writer()
+            .uint64_t(resNum, true)
+            .buffer
+            .valueOf();
+
+        buffer.set(value, index);
 
         return buffer;
     }
@@ -189,33 +212,25 @@ export default class CryptoNoteBase58 implements Base58Handler {
         if (data.length < 1 || data.length > FULL_ENCODED_BLOCK_SIZE) {
             throw new Error('Invalid block length: ' + data.length);
         }
-        let num = Helpers.uint8BeTo64(data);
+
+        let num = new Reader(data).uint64_t(true);
+
         let i = ENCODED_BLOCK_SIZES[data.length] - 1;
+
         while (num.compare(0) === 1) {
             const div = num.divmod(ALPHABET.length);
+
             const remainder = div.remainder;
+
             num = div.quotient;
+
             buffer[index + i] = ALPHABET[remainder.toJSNumber()];
+
             i--;
         }
+
         return buffer;
     }
-
-    /**
-     * Decodes the Base58 encoded string into a Buffer
-     *
-     * @param encoded
-     */
-    public decode (encoded: string): Buffer {
-        return CryptoNoteBase58.decode(encoded);
-    }
-
-    /**
-     * Encodes the data into Base58
-     *
-     * @param data
-     */
-    public encode (data: string | Uint8Array | Buffer): string {
-        return CryptoNoteBase58.encode(data);
-    }
 }
+
+export { CryptoNoteBase58 };
