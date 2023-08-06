@@ -19,9 +19,7 @@
 // SOFTWARE.
 
 import CryptoNoteBase58 from './cryptonote_base58';
-
-/** @ignore */
-const { base58_to_binary, binary_to_base58 } = require('base58-js');
+import { base58_to_binary, binary_to_base58 } from './base58-js';
 
 export default abstract class Base58 extends CryptoNoteBase58 {
     /**

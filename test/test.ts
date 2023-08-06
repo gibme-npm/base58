@@ -2,7 +2,7 @@
 //
 // Please see the included LICENSE file for more information.
 
-import * as assert from 'assert';
+import assert from 'assert';
 import { describe, it } from 'mocha';
 import Base58 from '../src/base58';
 
