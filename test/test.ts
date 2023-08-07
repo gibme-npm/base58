@@ -2,7 +2,7 @@
 //
 // Please see the included LICENSE file for more information.
 
-import assert from 'assert';
+import * as assert from 'assert';
 import { describe, it } from 'mocha';
 import Base58 from '../src/base58';
 
@@ -16,7 +16,7 @@ describe('Base58 Test', () => {
     it('Encoding', () => {
         const encoded = Base58.encode(expectedRaw);
 
-        assert.equal(encoded, expectedEncoded);
+        assert.deepEqual(encoded, expectedEncoded);
     });
 
     it('Decoding', () => {
@@ -37,7 +37,7 @@ describe('CryptoNote Base58 Test', () => {
     it('Encoding', () => {
         const encoded = Base58.cn_encode(expectedRaw);
 
-        assert.equal(encoded, expectedEncoded);
+        assert.deepEqual(encoded, expectedEncoded);
     });
 
     it('Decoding', () => {
