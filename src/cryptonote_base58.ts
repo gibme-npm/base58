@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { BytePackBigInt, Reader, Writer } from '@gibme/bytepack';
+import { BigInteger, Reader, Writer } from '@gibme/bytepack';
 
 /** @ignore */
 const ALPHABET: number[] = (() => {
@@ -38,7 +38,7 @@ const FULL_BLOCK_SIZE = 8;
 const FULL_ENCODED_BLOCK_SIZE = 11;
 
 /** @ignore */
-const UINT64_MAX = BytePackBigInt(2).pow(64);
+const UINT64_MAX = BigInteger(2).pow(64);
 
 export default abstract class CryptoNoteBase58 {
     /**
@@ -164,9 +164,9 @@ export default abstract class CryptoNoteBase58 {
             throw new Error('Invalid block size');
         }
 
-        let resNum = BytePackBigInt.zero;
+        let resNum = BigInteger.zero;
 
-        let order = BytePackBigInt.one;
+        let order = BigInteger.one;
 
         for (let i = data.length - 1; i >= 0; i--) {
             const digit = ALPHABET.indexOf(data[i]);
@@ -186,7 +186,7 @@ export default abstract class CryptoNoteBase58 {
             order = order.multiply(ALPHABET.length);
         }
 
-        if (resSize < FULL_BLOCK_SIZE && (BytePackBigInt(2).pow(8 * resSize).compare(resNum) <= 0)) {
+        if (resSize < FULL_BLOCK_SIZE && (BigInteger(2).pow(8 * resSize).compare(resNum) <= 0)) {
             throw new Error('Overflow 2');
         }
 
