@@ -1,6 +1,6 @@
 {
   "name": "@gibme/base58",
-  "version": "1.0.6",
+  "version": "1.0.10",
   "description": "Base58 Library",
   "main": "dist/base58.js",
   "types": "dist/base58.d.ts",
@@ -54,6 +54,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@gibme/bytepack": "^1.0.6"
+    "@gibme/bytepack": "^1.0.10"
   }
 }
