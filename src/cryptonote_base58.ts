@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 import { BigInteger, Reader, Writer } from '@gibme/bytepack';
+import { Buffer } from 'buffer';
 
 /** @ignore */
 const ALPHABET: number[] = (() => {

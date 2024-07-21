@@ -20,6 +20,7 @@
 
 import CryptoNoteBase58 from './cryptonote_base58';
 import { base58_to_binary, binary_to_base58 } from './base58-js';
+import { Buffer } from 'buffer';
 
 export default abstract class Base58 extends CryptoNoteBase58 {
     /**
@@ -49,4 +50,4 @@ export default abstract class Base58 extends CryptoNoteBase58 {
     }
 }
 
-export { Base58 };
+export { Base58, Buffer };

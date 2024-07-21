@@ -4,7 +4,7 @@
 
 import * as assert from 'assert';
 import { describe, it } from 'mocha';
-import Base58 from '../src/base58';
+import Base58 from '../src/index';
 
 describe('Base58 Test', () => {
     const expectedRaw = Buffer.from(
