@@ -48,7 +48,7 @@ const base58Map = create_base58_map();
  *
  * @param base58String
  */
-export const base58_to_binary = (base58String: string): Uint8Array => {
+export const base58_to_binary = (base58String: string): Uint8Array<ArrayBuffer> => {
     if (base58String.match(/[IOl0]/gmu)) {
         throw new Error(
             `Invalid base58 character “${base58String.match(/[IOl0]/gmu)}”`

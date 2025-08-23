@@ -154,7 +154,11 @@ export default abstract class CryptoNoteBase58 {
      * @param index
      * @private
      */
-    private static decodeBlock (data: Uint8Array, buffer: Uint8Array, index: number): Uint8Array {
+    private static decodeBlock (
+        data: Uint8Array,
+        buffer: Uint8Array<ArrayBuffer>,
+        index: number
+    ): Uint8Array<ArrayBuffer> {
         if (data.length < 1 || data.length > FULL_ENCODED_BLOCK_SIZE) {
             throw new Error('Invalid block length: ' + data.length);
         }
@@ -209,7 +213,11 @@ export default abstract class CryptoNoteBase58 {
      * @param index
      * @private
      */
-    private static encodeBlock (data: Uint8Array, buffer: Uint8Array, index: number): Uint8Array {
+    private static encodeBlock (
+        data: Uint8Array,
+        buffer: Uint8Array<ArrayBuffer>,
+        index: number
+    ): Uint8Array<ArrayBuffer> {
         if (data.length < 1 || data.length > FULL_ENCODED_BLOCK_SIZE) {
             throw new Error('Invalid block length: ' + data.length);
         }
