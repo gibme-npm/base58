@@ -3,7 +3,7 @@
 // Please see the included LICENSE file for more information.
 
 import * as assert from 'assert';
-import { describe, it } from 'mocha';
+import { describe, it } from 'node:test';
 import Base58 from '../src/index';
 
 describe('Base58 Test', () => {
